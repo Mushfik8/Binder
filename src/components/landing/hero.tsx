@@ -71,7 +71,7 @@ export function HeroSection() {
         <InView delay={1.4}>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <motion.a
-              href="#join"
+              href="/age-gate"
               className="btn-primary group flex items-center gap-2 text-base"
               id="hero-join-cta"
               whileHover={{ scale: 1.03 }}

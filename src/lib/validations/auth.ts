@@ -6,13 +6,13 @@ export const ageGateSchema = z.object({
   month: z.number().int().min(1).max(12),
   year: z.number().int().min(1900).max(new Date().getFullYear() - 18),
   isAdult: z.literal(true, {
-    errorMap: () => ({ message: 'You must confirm you are 18 or older' }),
+    error: 'You must confirm you are 18 or older',
   }),
   acceptsHealthDisclaimer: z.literal(true, {
-    errorMap: () => ({ message: 'You must acknowledge the health disclaimer' }),
+    error: 'You must acknowledge the health disclaimer',
   }),
   understandsNoSales: z.literal(true, {
-    errorMap: () => ({ message: 'You must acknowledge that Binder does not sell tobacco' }),
+    error: 'You must acknowledge that Binder does not sell tobacco',
   }),
 });
 

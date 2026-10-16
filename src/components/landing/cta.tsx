@@ -39,7 +39,7 @@ export function CTASection() {
 
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <motion.a
-              href="/signup"
+              href="/age-gate"
               className="btn-primary group flex items-center gap-2 text-base"
               id="cta-join-button"
               whileHover={{ scale: 1.03 }}

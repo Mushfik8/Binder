@@ -56,7 +56,7 @@ export function Header() {
             </a>
           ))}
           <a
-            href="#join"
+            href="/age-gate"
             className="inline-flex items-center rounded-full px-5 py-2 text-sm font-semibold text-white transition-all hover:shadow-lg"
             style={{ background: 'var(--gradient-ember)' }}
             id="nav-join-cta"
@@ -103,7 +103,7 @@ export function Header() {
               </a>
             ))}
             <a
-              href="#join"
+              href="/age-gate"
               className="mt-2 flex justify-center rounded-full px-5 py-3 text-sm font-semibold text-white"
               style={{ background: 'var(--gradient-ember)' }}
               onClick={() => setIsMobileMenuOpen(false)}
