@@ -1,30 +1,75 @@
 'use client';
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { profileBasicsSchema, type ProfileBasicsData } from '@/lib/validations/profile';
+import { z } from 'zod';
 import { User } from 'lucide-react';
+import { CitySelector } from '@/components/ui/city-selector';
+
+const basicsSchema = z.object({
+  displayName: z
+    .string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, 'Name must be 50 characters or less'),
+  age: z
+    .number()
+    .int()
+    .min(18, 'Must be at least 18')
+    .max(120, 'Please enter a valid age'),
+  pronouns: z.string().max(30).optional(),
+});
+
+type BasicsFormData = z.infer<typeof basicsSchema>;
 
 interface BasicInfoStepProps {
-  initialData: Partial<ProfileBasicsData>;
-  onNext: (data: ProfileBasicsData) => void;
+  initialData: {
+    displayName?: string;
+    age?: number;
+    city?: string;
+    country?: string;
+    pronouns?: string;
+  };
+  onNext: (data: { displayName: string; age: number; city: string; country: string; pronouns?: string }) => void;
   onBack: () => void;
 }
 
 export function BasicInfoStep({ initialData, onNext, onBack }: BasicInfoStepProps) {
+  const [city, setCity] = useState(initialData.city || '');
+  const [country, setCountry] = useState(initialData.country || '');
+  const [cityError, setCityError] = useState('');
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProfileBasicsData>({
-    resolver: zodResolver(profileBasicsSchema),
+  } = useForm<BasicsFormData>({
+    resolver: zodResolver(basicsSchema),
     defaultValues: {
       displayName: initialData.displayName || '',
       age: initialData.age || undefined,
-      city: initialData.city || '',
       pronouns: initialData.pronouns || '',
     },
   });
+
+  const onSubmit = (data: BasicsFormData) => {
+    if (!city || !country) {
+      setCityError('Please select your city');
+      return;
+    }
+    setCityError('');
+    onNext({
+      displayName: data.displayName,
+      age: data.age,
+      city,
+      country,
+      pronouns: data.pronouns,
+    });
+  };
+
+  const displayValue = city && country
+    ? `${city}, ${country}`
+    : '';
 
   return (
     <div>
@@ -41,7 +86,7 @@ export function BasicInfoStep({ initialData, onNext, onBack }: BasicInfoStepProp
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onNext)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Display Name */}
         <div>
           <label htmlFor="onboard-name" className="mb-1 block text-sm font-medium text-[var(--text-secondary)]">
@@ -78,22 +123,12 @@ export function BasicInfoStep({ initialData, onNext, onBack }: BasicInfoStepProp
           )}
         </div>
 
-        {/* City */}
-        <div>
-          <label htmlFor="onboard-city" className="mb-1 block text-sm font-medium text-[var(--text-secondary)]">
-            City *
-          </label>
-          <input
-            id="onboard-city"
-            type="text"
-            placeholder="e.g. Dhaka, Chittagong"
-            {...register('city')}
-            className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-[var(--text)] placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
-          />
-          {errors.city && (
-            <p className="mt-1 text-xs text-[var(--danger)]">{errors.city.message}</p>
-          )}
-        </div>
+        {/* City — searchable selector */}
+        <CitySelector
+          value={displayValue}
+          onChange={(c, co) => { setCity(c); setCountry(co); setCityError(''); }}
+          error={cityError}
+        />
 
         {/* Pronouns (optional) */}
         <div>

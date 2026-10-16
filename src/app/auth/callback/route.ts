@@ -4,27 +4,30 @@ import { createClient } from '@/lib/supabase/server';
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
-  const next = searchParams.get('next') ?? '/onboarding';
 
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // Check if profile exists and onboarding is complete
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
       if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('onboarding_completed')
-          .eq('id', user.id)
-          .single();
+        // Try to check if profile exists (table might not exist yet)
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('onboarding_completed')
+            .eq('id', user.id)
+            .single();
 
-        if (profile?.onboarding_completed) {
-          return NextResponse.redirect(`${origin}/discover`);
+          if (profile?.onboarding_completed) {
+            return NextResponse.redirect(`${origin}/discover`);
+          }
+        } catch {
+          // profiles table might not exist yet — that's fine
         }
 
         // New user or incomplete onboarding

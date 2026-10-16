@@ -36,9 +36,9 @@ export default function AgeGatePage() {
     const m = parseInt(month, 10);
     const y = parseInt(year, 10);
 
-    if (!d || d < 1 || d > 31) newErrors.push('Please enter a valid day');
+    if (!d || d < 1 || d > 31) newErrors.push('Day must be between 1 and 31');
     if (!m || m < 1 || m > 12) newErrors.push('Please select a month');
-    if (!y || y < 1900 || y > 2100) newErrors.push('Please enter a valid year');
+    if (!y || year.length !== 4 || y < 1900 || y > 2025) newErrors.push('Year must be a 4-digit number (e.g. 2000)');
 
     if (newErrors.length > 0) {
       setErrors(newErrors);
@@ -131,14 +131,19 @@ export default function AgeGatePage() {
                       </label>
                       <input
                         id="age-day"
-                        type="number"
-                        min="1"
-                        max="31"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={2}
                         placeholder="DD"
                         value={day}
-                        onChange={(e) => setDay(e.target.value)}
+                        onChange={(e) => {
+                          const v = e.target.value.replace(/\D/g, '').slice(0, 2);
+                          const num = parseInt(v, 10);
+                          if (v === '' || (num >= 0 && num <= 31)) setDay(v);
+                        }}
                         className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-3 text-center text-[var(--text)] placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
-                        aria-label="Day of birth"
+                        aria-label="Day of birth (1-31)"
                         required
                       />
                     </div>
@@ -175,12 +180,16 @@ export default function AgeGatePage() {
                       </label>
                       <input
                         id="age-year"
-                        type="number"
-                        min="1900"
-                        max="2100"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={4}
                         placeholder="YYYY"
                         value={year}
-                        onChange={(e) => setYear(e.target.value)}
+                        onChange={(e) => {
+                          const v = e.target.value.replace(/\D/g, '').slice(0, 4);
+                          setYear(v);
+                        }}
                         className="w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-3 text-center text-[var(--text)] placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
                         aria-label="Year of birth"
                         required

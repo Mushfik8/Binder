@@ -271,26 +271,30 @@ CREATE POLICY "Users can manage own blocks"
 
 -- ============================================
 -- TRIGGER: auto-create profile on signup
+-- NOTE: Profile is now created by app code during onboarding,
+-- not by a database trigger. This avoids signup failures
+-- if the migration hasn't been run yet.
 -- ============================================
-CREATE OR REPLACE FUNCTION handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO profiles (id, display_name, age, terms_accepted_at, health_disclaimer_accepted_at)
-  VALUES (
-    NEW.id,
-    COALESCE(NEW.raw_user_meta_data->>'display_name', 'Binder User'),
-    18, -- Default age; updated during onboarding
-    now(),
-    now()
-  );
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE OR REPLACE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW
-  EXECUTE FUNCTION handle_new_user();
+-- Uncomment below if you want auto-profile creation via trigger:
+-- CREATE OR REPLACE FUNCTION handle_new_user()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--   INSERT INTO profiles (id, display_name, age, terms_accepted_at, health_disclaimer_accepted_at)
+--   VALUES (
+--     NEW.id,
+--     COALESCE(NEW.raw_user_meta_data->>'display_name', 'Binder User'),
+--     18,
+--     now(),
+--     now()
+--   );
+--   RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql SECURITY DEFINER;
+--
+-- CREATE OR REPLACE TRIGGER on_auth_user_created
+--   AFTER INSERT ON auth.users
+--   FOR EACH ROW
+--   EXECUTE FUNCTION handle_new_user();
 
 -- ============================================
 -- TRIGGER: update updated_at timestamp
