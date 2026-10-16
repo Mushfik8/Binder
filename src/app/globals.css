@@ -64,8 +64,8 @@
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-warning: var(--warning);
-  --font-sans: 'Inter', 'Noto Sans Bengali', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Outfit', 'Noto Sans Bengali', system-ui, sans-serif;
+  --font-sans: var(--font-inter), var(--font-noto-bengali), system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-outfit), var(--font-noto-bengali), system-ui, sans-serif;
 }
 
 /* ============================================
