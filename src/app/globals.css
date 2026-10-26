@@ -262,6 +262,51 @@ body {
   50% { box-shadow: 0 0 40px rgba(232, 98, 44, 0.4); }
 }
 
+/* ============================================
+   FILTER RANGE INPUTS
+   ============================================ */
+.filter-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: var(--surface-elevated);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+.filter-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--gradient-ember);
+  border: 2px solid var(--surface);
+  box-shadow: 0 2px 8px rgba(232, 98, 44, 0.4);
+  cursor: grab;
+  transition: transform 0.15s;
+}
+.filter-range::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+  cursor: grabbing;
+}
+.filter-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--gradient-ember);
+  border: 2px solid var(--surface);
+  box-shadow: 0 2px 8px rgba(232, 98, 44, 0.4);
+  cursor: grab;
+}
+
+/* ============================================
+   SAFE AREA (iOS notch / Android nav bar)
+   ============================================ */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
