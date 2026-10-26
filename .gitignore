@@ -47,3 +47,24 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# IDE & AI agent configs (local only, NOT for GitHub)
+.agents/
+.augment/
+.claude/
+.codebuddy/
+.codewhale/
+.continue/
+.cursor/
+.factory/
+.gemini/
+.github/
+.kilocode/
+.kiro/
+.opencode/
+.qoder/
+.roo/
+.trae/
+.warp/
+.windsurf/
+AGENTS.md
